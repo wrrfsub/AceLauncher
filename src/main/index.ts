@@ -2,6 +2,7 @@ import { app, BrowserWindow, shell } from 'electron'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { openDatabase } from '../database/index.ts'
+import { initDiscord } from '../services/discord.ts'
 import { getSettings } from '../services/settings.ts'
 import { setAppVersion } from '../utils/http.ts'
 import { applyTitleBarTheme, registerIpc } from './ipc.ts'
@@ -66,6 +67,7 @@ app.whenReady().then(() => {
   createWindow()
   applyTitleBarTheme()
   initUpdater()
+  initDiscord()
   app.on('activate', () => BrowserWindow.getAllWindows().length === 0 && createWindow())
 })
 

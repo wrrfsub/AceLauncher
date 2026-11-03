@@ -21,6 +21,8 @@ function defaults(): Settings {
     msClientId: '',
     curseforgeApiKey: '',
     featuredInstanceId: null,
+    discordPresence: true,
+    discordClientId: '',
   }
 }
 
@@ -43,6 +45,10 @@ export function msClientId(): string {
 
 export function curseforgeApiKey(): string {
   return getSettings().curseforgeApiKey || import.meta.env.MAIN_VITE_CURSEFORGE_API_KEY || ''
+}
+
+export function discordClientId(): string {
+  return getSettings().discordClientId || import.meta.env.MAIN_VITE_DISCORD_CLIENT_ID || ''
 }
 
 export const paths = {

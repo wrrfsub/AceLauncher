@@ -1,6 +1,7 @@
 import type {
   Account,
   Activity,
+  DiscordStatus,
   AppInfo,
   ContentKind,
   ContentSource,
@@ -68,6 +69,8 @@ export interface IpcApi {
   'news:list': () => NewsItem[]
   'activity:list': () => Activity[]
 
+  'discord:status': () => DiscordStatus
+
   'updates:state': () => UpdateState
   'updates:check': () => UpdateState
   'updates:download': () => void
@@ -83,6 +86,7 @@ export interface IpcEvents {
   'game:status': GameStatus
   'game:log': LogLine[]
   'updates:state': UpdateState
+  'discord:status': DiscordStatus
 }
 
 export type InvokeChannel = keyof IpcApi
@@ -100,13 +104,13 @@ export const INVOKE_CHANNELS = [
   'java:list', 'dialog:pickJava', 'dialog:pickDirectory',
   'tasks:list', 'tasks:cancel',
   'content:search', 'content:install', 'content:list', 'content:remove', 'content:toggle', 'modpack:install',
-  'news:list', 'activity:list',
+  'news:list', 'activity:list', 'discord:status',
   'updates:state', 'updates:check', 'updates:download', 'updates:install',
 ] as const satisfies readonly InvokeChannel[]
 
 export const EVENT_CHANNELS = [
   'tasks:changed', 'instances:changed', 'accounts:changed', 'activity:changed',
-  'game:status', 'game:log', 'updates:state',
+  'game:status', 'game:log', 'updates:state', 'discord:status',
 ] as const satisfies readonly EventChannel[]
 
 /** Handlers return this envelope so error messages survive the IPC boundary intact. */

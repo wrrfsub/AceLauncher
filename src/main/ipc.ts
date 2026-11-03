@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { getLoaderVersions, getMinecraftVersions } from '../minecraft/versions.ts'
 import { probeJava } from '../minecraft/java.ts'
 import { listActivity } from '../services/activity.ts'
+import { discordStatus, syncDiscord } from '../services/discord.ts'
 import { listAccounts, login, removeAccount, selectAccount, tokenStorage } from '../services/accounts.ts'
 import { installContent, installModpack, listContent, removeContent, searchContent, toggleContent } from '../services/content.ts'
 import { gameLogs, gameStatuses, installInstance, killGame, launchInstance, listJava } from '../services/game.ts'
@@ -70,6 +71,8 @@ const settingsPatch = z
     msClientId: z.string().regex(/^([0-9a-f-]{36})?$/i, 'client id must be a GUID'),
     curseforgeApiKey: text(256),
     featuredInstanceId: id.nullable(),
+    discordPresence: z.boolean(),
+    discordClientId: z.string().regex(/^(\d{17,20})?$/, 'Discord application id is a 17–20 digit number'),
   })
   .partial()
   .strict()
@@ -93,6 +96,7 @@ export function registerIpc(): void {
   handle('settings:set', settingsPatch, (patch) => {
     const next = updateSettings(patch)
     if (patch.theme) applyTitleBarTheme()
+    if ('discordPresence' in patch || 'discordClientId' in patch) syncDiscord()
     return next
   })
 
@@ -205,6 +209,7 @@ export function registerIpc(): void {
 
   handle('news:list', none, listNews)
   handle('activity:list', none, () => listActivity())
+  handle('discord:status', none, discordStatus)
 
   handle('updates:state', none, updateState)
   handle('updates:check', none, checkForUpdates)

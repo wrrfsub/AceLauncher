@@ -20,6 +20,7 @@ Real installs, real Microsoft sign-in, isolated instances, and Modrinth/CurseFor
 | **Modpacks** | Modrinth `.mrpack` → a new instance with the right loader, files and overrides |
 | **Console** | Live game output (Minecraft's log4j XML parsed into readable lines), crash detection, process status |
 | **News** | Minecraft Java patch notes from Mojang's launcher feed, plus an optional announcements feed |
+| **Discord** | Rich Presence: the instance you're playing, its version, loader and mod count, elapsed time, install progress, and a "Get Ace Launcher" button. Reconnects when Discord opens; works with Flatpak, Snap and Vesktop |
 | **Updates** | electron-updater wiring; reports "unconfigured" when no update feed is set instead of pretending to check |
 
 ## Tech stack
@@ -88,6 +89,13 @@ Tokens are encrypted with Electron `safeStorage` (Keychain, DPAPI, or libsecret/
 ### CurseForge (optional)
 
 Get a key at <https://console.curseforge.com> and put it in `MAIN_VITE_CURSEFORGE_API_KEY`. Some authors block third-party downloads; those files show a clear error with a link instead.
+
+### Discord Rich Presence (optional)
+
+1. Go to <https://discord.com/developers/applications> → **New Application**. The name you give it is what friends see after "Playing" (e.g. *Ace Launcher*).
+2. Copy the **Application ID** from **General Information** into `MAIN_VITE_DISCORD_CLIENT_ID`, or paste it in **Settings → Discord**.
+
+The app icon is served from this repository, so you don't need to upload any art assets. Presence talks to the Discord desktop app over its local socket (no extra dependency) and can be turned off in Settings.
 
 ### Auto-updates (optional)
 

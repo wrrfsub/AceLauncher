@@ -1,6 +1,6 @@
 import { FolderOpen, RefreshCw, ShieldAlert, ShieldCheck } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
-import { ACCENTS, type Accent, type JavaRuntime, type UpdateState } from '@shared/types'
+import { ACCENTS, type Accent, type DiscordStatus, type JavaRuntime, type UpdateState } from '@shared/types'
 import { Button } from '../components/ui/Button'
 import { Badge, Input, Progress, Row, Segmented, Slider, Switch } from '../components/ui/controls'
 import { Select } from '../components/ui/Select'
@@ -19,6 +19,7 @@ export function Settings() {
         <JavaSection />
         <GameSection />
         <AppearanceSection />
+        <DiscordSection />
         <UpdatesSection />
         <AdvancedSection />
       </div>
@@ -189,6 +190,51 @@ function AppearanceSection() {
       </Row>
       <Row title="Reduce motion" description="Turns off most animations.">
         <Switch label="Reduce motion" checked={settings.reduceMotion} onChange={(v) => updateSettings({ reduceMotion: v })} />
+      </Row>
+    </Section>
+  )
+}
+
+function DiscordSection() {
+  const { settings, updateSettings } = useApp()
+  const [status, setStatus] = useState<DiscordStatus | null>(null)
+  const [appId, setAppId] = useState(settings.discordClientId)
+  useEffect(() => {
+    invoke('discord:status').then(setStatus, () => {})
+    return ace.on('discord:status', setStatus)
+  }, [])
+
+  const line: Record<DiscordStatus['state'], [string, string]> = {
+    off: ['Off', 'bg-text-3'],
+    unconfigured: ['Add a Discord application ID to turn this on', 'bg-warn'],
+    connecting: ['Connecting to Discord…', 'bg-warn'],
+    connected: [`Connected${status?.user ? ` as ${status.user}` : ''}`, 'bg-ok'],
+    unavailable: [status?.error === 'Discord is not running' ? "Discord isn't running. Ace will connect when it opens." : `Not connected: ${status?.error ?? ''}`, 'bg-text-3'],
+  }
+  const [text, dot] = status ? line[status.state] : ['…', 'bg-text-3']
+
+  return (
+    <Section title="Discord">
+      <Row
+        title="Rich Presence"
+        description={
+          <span className="flex items-center gap-1.5">
+            <span className={cn('size-1.5 rounded-full', dot)} />
+            {text}
+          </span>
+        }
+      >
+        <Switch label="Show what you're playing on Discord" checked={settings.discordPresence} onChange={(v) => updateSettings({ discordPresence: v })} />
+      </Row>
+      <Row title="Application ID" description="From discord.com/developers → your app → General Information. Its name is what Discord shows after “Playing”.">
+        <Input
+          className="w-60 font-mono"
+          inputMode="numeric"
+          value={appId}
+          placeholder="123456789012345678"
+          onChange={(e) => setAppId(e.target.value.trim())}
+          onBlur={() => appId !== settings.discordClientId && updateSettings({ discordClientId: appId })}
+        />
       </Row>
     </Section>
   )

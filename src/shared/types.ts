@@ -73,6 +73,10 @@ export interface Settings {
   msClientId: string
   curseforgeApiKey: string
   featuredInstanceId: string | null
+  /** Show what you're playing on Discord. */
+  discordPresence: boolean
+  /** Overrides the build-time Discord application id when set. */
+  discordClientId: string
 }
 
 export interface McVersion {
@@ -192,6 +196,13 @@ export interface UpdateState {
   status: 'idle' | 'unconfigured' | 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
   version: string | null
   progress: number
+  error: string | null
+}
+
+export interface DiscordStatus {
+  state: 'off' | 'unconfigured' | 'connecting' | 'connected' | 'unavailable'
+  /** Discord display name when connected. */
+  user: string | null
   error: string | null
 }
 

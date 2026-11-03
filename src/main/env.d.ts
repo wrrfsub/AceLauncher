@@ -4,6 +4,7 @@
 interface ImportMetaEnv {
   readonly MAIN_VITE_MS_CLIENT_ID?: string
   readonly MAIN_VITE_CURSEFORGE_API_KEY?: string
+  readonly MAIN_VITE_DISCORD_CLIENT_ID?: string
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv
