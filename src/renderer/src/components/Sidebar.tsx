@@ -7,6 +7,7 @@ import { useApp, type Route } from '../state'
 import { Logo } from './Logo'
 import { SkinHead } from './SkinHead'
 import { Progress } from './ui/controls'
+import { useToast } from './ui/Toast'
 
 const NAV: Array<{ page: Route['page']; label: string; icon: ComponentType<{ className?: string }> }> = [
   { page: 'home', label: 'Home', icon: House },
@@ -92,7 +93,8 @@ function TaskTray() {
 }
 
 function AccountMenu() {
-  const { accounts, info, act } = useApp()
+  const { accounts, info, act, navigate } = useApp()
+  const toast = useToast()
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const root = useRef<HTMLDivElement>(null)
@@ -106,6 +108,16 @@ function AccountMenu() {
   }, [open])
 
   const signIn = async () => {
+    if (!info.authConfigured) {
+      setOpen(false)
+      navigate({ page: 'settings' })
+      toast.show({
+        tone: 'info',
+        title: 'Microsoft sign-in needs an Azure client ID',
+        description: 'Paste it under Settings → Advanced. The README explains how to register one with Microsoft and get it approved by Mojang.',
+      })
+      return
+    }
     setBusy(true)
     await act(() => invoke('accounts:login'))
     setBusy(false)
@@ -164,8 +176,7 @@ function AccountMenu() {
       ) : (
         <button
           onClick={accounts.length ? () => setOpen((o) => !o) : signIn}
-          disabled={busy || !info.authConfigured}
-          title={info.authConfigured ? undefined : 'Set an Azure client id in Settings → Advanced'}
+          disabled={busy}
           className="flex w-full items-center gap-2.5 rounded-xl border border-dashed border-line-strong px-3 py-2.5 text-left text-[13px] text-text-2 hover:border-text-3 hover:text-text disabled:opacity-50"
         >
           <LogIn className="size-4" />

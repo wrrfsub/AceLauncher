@@ -67,6 +67,7 @@ export function AppProvider({ children }: { children: (ready: boolean) => ReactN
   const [loaded, setLoaded] = useState<Loaded | null>(null)
   const [failure, setFailure] = useState<string | null>(null)
   const [settings, setSettings] = useState<Settings | null>(null)
+  const [info, setInfo] = useState<AppInfo | null>(null)
   const [instances, setInstances] = useState<Instance[]>([])
   const [accounts, setAccounts] = useState<Account[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
@@ -85,6 +86,7 @@ export function AppProvider({ children }: { children: (ready: boolean) => ReactN
     loadAll().then(
       (l) => {
         setLoaded(l)
+        setInfo(l.info)
         setSettings(l.settings)
         setInstances(l.instances)
         setAccounts(l.accounts)
@@ -128,16 +130,18 @@ export function AppProvider({ children }: { children: (ready: boolean) => ReactN
     async (patch: Partial<Settings>) => {
       const next = await act(() => invoke('settings:set', patch))
       if (next) setSettings(next)
+      // Keys decide whether sign-in and CurseForge are available.
+      if (next && ('msClientId' in patch || 'curseforgeApiKey' in patch)) setInfo(await invoke('app:info'))
     },
     [act],
   )
 
   const value = useMemo<AppContext | null>(
     () =>
-      loaded && settings
-        ? { info: loaded.info, settings, instances, accounts, tasks, statuses, activity, route, navigate: setRoute, updateSettings, act }
+      loaded && settings && info
+        ? { info, settings, instances, accounts, tasks, statuses, activity, route, navigate: setRoute, updateSettings, act }
         : null,
-    [loaded, settings, instances, accounts, tasks, statuses, activity, route, updateSettings, act],
+    [loaded, settings, info, instances, accounts, tasks, statuses, activity, route, updateSettings, act],
   )
 
   if (failure) {
