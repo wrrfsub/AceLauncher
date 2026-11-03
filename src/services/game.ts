@@ -55,7 +55,7 @@ async function pickJava(inst: Instance | null, req: { component: string; majorVe
 export function installInstance(id: string, repair = false): Promise<string> {
   const inst = getInstance(id)
   const label = `${inst.minecraft}${inst.loader === 'vanilla' ? '' : ` · ${loaderName(inst.loader)}`}`
-  return runTask({ key: `install:${id}`, title: `${repair ? 'Repairing' : 'Installing'} ${label}`, instanceId: id }, async (progress) => {
+  return runTask({ key: `install:${id}`, kind: 'install', title: `${repair ? 'Repairing' : 'Installing'} ${label}`, instanceId: id }, async (progress) => {
     const versionId = await installVersion(
       { minecraft: inst.minecraft, loader: inst.loader, loaderVersion: inst.loaderVersion },
       { root: paths.root(), resolveJava: (v, p) => pickJava(inst, v.javaVersion, p) },
@@ -129,7 +129,7 @@ export async function launchInstance(id: string): Promise<void> {
     }
     const versionId = inst.versionId!
     const req = await requiredJava(root, versionId)
-    const javaPath = await runTask({ key: `java:${req.component}`, title: `Preparing Java ${req.majorVersion}` }, (p) => pickJava(inst, req, p))
+    const javaPath = await runTask({ key: `java:${req.component}`, kind: 'java', title: `Preparing Java ${req.majorVersion}`, instanceId: id }, (p) => pickJava(inst, req, p))
     const settings = getSettings()
     const extraJVMArgs = [...splitArgs(settings.jvmArgs), ...splitArgs(inst.jvmArgs)]
     say(`Launching ${versionId} with ${javaPath}`)

@@ -88,6 +88,7 @@ export interface LoaderVersion {
 
 export interface Task {
   id: string
+  kind: 'install' | 'java' | 'content' | 'modpack'
   title: string
   instanceId: string | null
   stage: string
@@ -197,7 +198,9 @@ export interface UpdateState {
 export interface AppInfo {
   name: string
   version: string
-  platform: NodeJS.Platform | string
+  platform: string
+  /** bytes */
+  totalMemory: number
   tokenStorage: 'secure' | 'weak' | 'unavailable'
   authConfigured: boolean
   curseforgeEnabled: boolean

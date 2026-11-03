@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, shell, type IpcMainInvokeEvent } from 'electron'
 import { mkdir } from 'node:fs/promises'
+import { totalmem } from 'node:os'
 import { join } from 'node:path'
 import { z } from 'zod'
 import { getLoaderVersions, getMinecraftVersions } from '../minecraft/versions.ts'
@@ -77,11 +78,12 @@ const loader = z.enum(LOADERS)
 const kind = z.enum(CONTENT_KINDS)
 
 export function registerIpc(): void {
-  handle('app:info', none, () => ({
+  handle('app:info', none, async () => ({
     name: BRANDING.name,
     version: app.getVersion(),
     platform: process.platform,
-    tokenStorage: tokenStorage(),
+    totalMemory: totalmem(),
+    tokenStorage: await tokenStorage(),
     authConfigured: !!msClientId(),
     curseforgeEnabled: !!curseforgeApiKey(),
   }))

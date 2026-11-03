@@ -33,21 +33,22 @@ interface Row {
 }
 
 /** On Linux without a keyring Electron falls back to a hard-coded key; we still store, but say so. */
-export function tokenStorage(): AppInfo['tokenStorage'] {
-  if (!safeStorage.isEncryptionAvailable()) return 'unavailable'
+export async function tokenStorage(): Promise<AppInfo['tokenStorage']> {
+  if (!(await safeStorage.isAsyncEncryptionAvailable())) return 'unavailable'
   if (process.platform === 'linux' && safeStorage.getSelectedStorageBackend() === 'basic_text') return 'weak'
   return 'secure'
 }
 
-function seal(secrets: Secrets): Buffer {
-  if (!safeStorage.isEncryptionAvailable()) {
+async function seal(secrets: Secrets): Promise<Buffer> {
+  if (!(await safeStorage.isAsyncEncryptionAvailable())) {
     throw new Error('Secure storage is unavailable on this system, so sign-in tokens cannot be saved.')
   }
-  return safeStorage.encryptString(JSON.stringify(secrets))
+  return safeStorage.encryptStringAsync(JSON.stringify(secrets))
 }
 
-function unseal(blob: Uint8Array): Secrets {
-  return JSON.parse(safeStorage.decryptString(Buffer.from(blob))) as Secrets
+async function unseal(blob: Uint8Array): Promise<Secrets> {
+  const { result } = await safeStorage.decryptStringAsync(Buffer.from(blob))
+  return JSON.parse(result) as Secrets
 }
 
 function toAccount(r: Row): Account {
@@ -141,8 +142,8 @@ function promptForCode(clientId: string): Promise<{ code: string; verifier: stri
   })
 }
 
-function save(session: MinecraftSession, msRefreshToken: string): Account {
-  const secrets = seal({ msRefreshToken, mcAccessToken: session.accessToken })
+async function save(session: MinecraftSession, msRefreshToken: string): Promise<Account> {
+  const secrets = await seal({ msRefreshToken, mcAccessToken: session.accessToken })
   const { id, name, skinUrl } = session.profile
   const existing = db().prepare('SELECT id FROM accounts WHERE uuid = ?').get(id) as { id: string } | undefined
   const accountId = existing?.id ?? randomUUID()
@@ -165,7 +166,7 @@ export async function login(): Promise<Account> {
   const clientId = requireClientId()
   const { code, verifier } = await promptForCode(clientId)
   const ms = await exchangeCode(clientId, code, verifier)
-  const account = save(await loginMinecraft(ms.accessToken), ms.refreshToken)
+  const account = await save(await loginMinecraft(ms.accessToken), ms.refreshToken)
   logActivity('account', `Signed in as ${account.name}`)
   return account
 }
@@ -179,13 +180,13 @@ export interface LaunchCredentials {
 const refreshing = new Map<string, Promise<LaunchCredentials>>()
 
 /** Returns a valid Minecraft token for the active account, refreshing through Microsoft when close to expiry. */
-export function activeCredentials(): Promise<LaunchCredentials> {
+export async function activeCredentials(): Promise<LaunchCredentials> {
   const row = rows().find((r) => r.active)
-  if (!row) return Promise.reject(new Error('Sign in with a Microsoft account to play.'))
-  if (row.needs_reauth) return Promise.reject(new Error(`Sign in to ${row.name} again to play.`))
-  const secrets = unseal(row.secrets)
+  if (!row) throw new Error('Sign in with a Microsoft account to play.')
+  if (row.needs_reauth) throw new Error(`Sign in to ${row.name} again to play.`)
+  const secrets = await unseal(row.secrets)
   if (row.mc_expires_at - Date.now() > 5 * 60_000) {
-    return Promise.resolve({ name: row.name, uuid: row.uuid, accessToken: secrets.mcAccessToken })
+    return { name: row.name, uuid: row.uuid, accessToken: secrets.mcAccessToken }
   }
   let job = refreshing.get(row.id)
   if (!job) {
@@ -193,7 +194,7 @@ export function activeCredentials(): Promise<LaunchCredentials> {
       try {
         const ms = await refreshMicrosoft(requireClientId(), secrets.msRefreshToken)
         const session = await loginMinecraft(ms.accessToken)
-        save(session, ms.refreshToken)
+        await save(session, ms.refreshToken)
         return { name: session.profile.name, uuid: session.profile.id, accessToken: session.accessToken }
       } catch (e) {
         if (e instanceof ReauthRequiredError) {

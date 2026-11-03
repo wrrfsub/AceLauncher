@@ -1,0 +1,142 @@
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Components only use these (via the Tailwind theme below), so themes and accents
+ * are a matter of swapping variables.
+ */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0c0e;
+  --bg-raised: #0f1013;
+  --surface: #141519;
+  --surface-2: #1a1b20;
+  --surface-3: #22242a;
+  --line: rgb(255 255 255 / 0.06);
+  --line-strong: rgb(255 255 255 / 0.11);
+  --text: #ececee;
+  --text-2: #a3a4ab;
+  --text-3: #6c6e76;
+  --danger: #f27272;
+  --warn: #f2b84b;
+  --ok: #5ee38b;
+  --scrim: rgb(5 6 8 / 0.72);
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 16px 40px -12px rgb(0 0 0 / 0.6);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f5f3;
+  --bg-raised: #eeeeeb;
+  --surface: #ffffff;
+  --surface-2: #f2f2ef;
+  --surface-3: #e7e7e3;
+  --line: rgb(0 0 0 / 0.07);
+  --line-strong: rgb(0 0 0 / 0.12);
+  --text: #131316;
+  --text-2: #55565d;
+  --text-3: #8b8c92;
+  --danger: #d4423f;
+  --warn: #b7791f;
+  --ok: #1f9d55;
+  --scrim: rgb(20 20 24 / 0.4);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.18);
+}
+
+[data-accent='mint'] { --accent: #5ee38b; --accent-ink: #062611; }
+[data-accent='amber'] { --accent: #f5b544; --accent-ink: #2b1a00; }
+[data-accent='azure'] { --accent: #62adff; --accent-ink: #001a38; }
+[data-accent='violet'] { --accent: #a891ff; --accent-ink: #160a3d; }
+[data-accent='rose'] { --accent: #ff7a8e; --accent-ink: #3a0610; }
+[data-theme='light'][data-accent='mint'] { --accent: #1c9a52; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='amber'] { --accent: #c47f12; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='azure'] { --accent: #1f6fd1; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='violet'] { --accent: #6a4ed6; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='rose'] { --accent: #d1435b; --accent-ink: #ffffff; }
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger: var(--danger);
+  --color-warn: var(--warn);
+  --color-ok: var(--ok);
+  --color-scrim: var(--scrim);
+  --shadow-card: var(--shadow);
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  overflow: hidden;
+}
+
+input,
+textarea,
+.selectable {
+  user-select: text;
+}
+
+/* Frameless window: the title strip drags the window, controls inside it opt out. */
+.drag { -webkit-app-region: drag; }
+.no-drag { -webkit-app-region: no-drag; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--text-3); }
+::-webkit-scrollbar-track { background: transparent; }
+
+input[type='range'] {
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--fill, 0%), var(--surface-3) var(--fill, 0%));
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--text);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--bg) 70%, transparent);
+  cursor: pointer;
+}

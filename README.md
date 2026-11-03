@@ -4,13 +4,14 @@ A modern, open-source Minecraft: Java Edition launcher built with Electron, Reac
 
 Real installs, real Microsoft sign-in, isolated instances, and Modrinth/CurseForge content: no offline mode, no ownership bypass.
 
-> **Status: early development.** The main-process core (installing, launching, auth, instances, mods, IPC) is written. Installs for Minecraft 1.21.1 with vanilla, Fabric, Quilt and NeoForge have been run against the live Mojang and loader servers; Forge currently fails at its post-processing step (see TODO). The React UI is not built yet, so `npm run dev` doesn't open a usable window. See the [TODO](#todo) and [Roadmap](#roadmap).
+> **Status: early development.** The core (installing, launching, auth, instances, mods, IPC) and the UI base (Home, Instances, Discover, Console, Settings) are in place. Installs have been run against the live Mojang and loader servers for vanilla, Fabric, Quilt and NeoForge on 1.21.1 and Forge on 1.20.1. Signing in and launching need your own approved Azure client ID (see below) and haven't been tested end to end yet. See the [TODO](#todo) and [Roadmap](#roadmap).
 
 ## Features
 
 | Area | What works today |
 | --- | --- |
 | **Versions** | Vanilla (releases, snapshots, old alpha/beta), Fabric, Quilt, Forge, NeoForge |
+| **Interface** | Dark/light/system themes, five accent colours, reduced motion, live task progress with cancel |
 | **Install & repair** | Version JSON, client jar, libraries, assets, loader installers. Every file is checksummed, so running an install again resumes it or repairs it |
 | **Java** | Detects system installs and downloads Mojang's official runtime matching each version's required major version |
 | **Instances** | Each instance has its own game folder (saves, mods, configs), memory, Java and launch args. Versions/libraries/assets are shared, so nothing downloads twice |
@@ -107,16 +108,18 @@ vendor/
 ## TODO
 
 ### Now
-- [ ] Fix Forge 1.21.1 install: processors produce `client-1.21.1-official.jar` with an unexpected checksum (may collide with NeoForge's file at the same path in a shared folder)
-- [ ] Renderer: app shell (sidebar, title bar, theme tokens, accent colours, light/dark)
-- [ ] Dashboard: featured instance, Play button, install status/progress, account, recent activity, news
-- [ ] Instances: grid, create dialog (version + loader picker), detail view with settings
-- [ ] Installed content view: mods / resource packs / shaders with toggle and remove
-- [ ] Discover: Modrinth/CurseForge search, filters, install into an instance, modpacks
-- [ ] Console: live log with level filter, copy, open folder, kill
-- [ ] Settings: Java list/picker, memory, downloads, game directory, appearance, updates, advanced
-- [ ] Account switcher with skin heads rendered from the profile skin
-- [ ] Task/progress tray with cancel
+- [x] Renderer: app shell (sidebar, title bar, theme tokens, accent colours, light/dark)
+- [x] Dashboard: featured instance, Play button, install status/progress, account, recent activity, news
+- [x] Instances: grid, create dialog (version + loader picker), detail view with settings
+- [x] Installed content view: mods / resource packs / shaders with toggle and remove
+- [x] Discover: Modrinth/CurseForge search, filters, install into an instance, modpacks
+- [x] Console: live log with level filter, copy, open folder, kill
+- [x] Settings: Java list/picker, memory, downloads, game directory, appearance, updates, advanced
+- [x] Account switcher with skin heads rendered from the profile skin
+- [x] Task/progress tray with cancel
+- [ ] Forge 52.1.21 for 1.21.1 fails post-processing. Forge's own installer fails the same way (an upstream bug); older 1.21.1 builds need testing, and the UI could steer away from known-bad builds
+- [ ] Drag-and-drop mods/packs into an instance
+- [ ] Keyboard shortcuts and a command palette
 
 ### Next
 - [ ] `electron-builder.yml`: Windows (NSIS), macOS (dmg, notarisation hooks), Linux (AppImage, deb)
@@ -127,7 +130,7 @@ vendor/
 
 ## Roadmap
 
-**v0.1: Playable** · UI shell, instances, install, sign in, launch, console.
+**v0.1: Playable** · UI shell, instances, install, sign in, launch, console. *(UI base done; end-to-end sign-in and launch next.)*
 
 **v0.2: Content** · Discover page, mod management, Modrinth modpacks, CurseForge with API key.
 

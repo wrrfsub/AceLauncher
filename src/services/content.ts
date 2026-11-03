@@ -101,7 +101,7 @@ export async function toggleContent(instanceId: string, kind: ContentKind, fileN
 export function installContent(instanceId: string, source: ContentSource, projectId: string, kind: ContentKind): Promise<InstalledContent[]> {
   const inst = getInstance(instanceId)
   const api = provider(source)
-  return runTask({ key: `content:${instanceId}:${source}:${projectId}`, title: `Adding content to ${inst.name}`, instanceId }, async (progress) => {
+  return runTask({ key: `content:${instanceId}:${source}:${projectId}`, kind: 'content', title: `Adding content to ${inst.name}`, instanceId }, async (progress) => {
     const target = { minecraft: inst.minecraft, loader: inst.loader, kind }
     const installed = new Map(
       (db().prepare('SELECT project_id, file_name FROM instance_content WHERE instance_id = ? AND source = ?').all(instanceId, source) as Array<{
@@ -174,7 +174,7 @@ function sha1(file: string): Promise<string> {
 
 /** Installs a Modrinth modpack (.mrpack) as a new instance, then installs its game version. */
 export function installModpack(projectId: string): Promise<Instance> {
-  return runTask({ key: `modpack:${projectId}`, title: 'Installing modpack' }, async (progress) => {
+  return runTask({ key: `modpack:${projectId}`, kind: 'modpack', title: 'Installing modpack' }, async (progress) => {
     progress.stage('Resolving modpack')
     const [project, versions] = await Promise.all([modrinth.project(projectId), modrinth.versions(projectId)])
     const latest = versions[0]

@@ -34,7 +34,7 @@ export function cancelTask(id: string): void {
  * Calls with the same `key` while one is running join it instead of starting a duplicate.
  */
 export function runTask<T>(
-  opts: { key: string; title: string; instanceId?: string | null },
+  opts: { key: string; kind: Task['kind']; title: string; instanceId?: string | null },
   fn: (progress: Progress) => Promise<T>,
 ): Promise<T> {
   for (const e of entries.values()) {
@@ -44,6 +44,7 @@ export function runTask<T>(
   const controller = new AbortController()
   const task: Task = {
     id: randomUUID(),
+    kind: opts.kind,
     title: opts.title,
     instanceId: opts.instanceId ?? null,
     stage: 'Starting',
