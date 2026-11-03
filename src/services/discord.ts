@@ -31,6 +31,7 @@ let lastSent = ''
 let status: DiscordStatus = { state: 'off', user: null, error: null }
 
 function setStatus(next: DiscordStatus): void {
+  if (next.state !== status.state) console.info(`[discord] ${next.state}${next.user ? ` as ${next.user}` : ''}${next.error ? `: ${next.error}` : ''}`)
   status = next
   broadcast('discord:status', status)
 }
