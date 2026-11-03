@@ -9,7 +9,7 @@ export const LOADER_NAMES: Record<Loader, string> = {
 }
 
 export function versionLabel(inst: Pick<Instance, 'minecraft' | 'loader'>): string {
-  return inst.loader === 'vanilla' ? inst.minecraft : `${inst.minecraft} · ${LOADER_NAMES[inst.loader]}`
+  return inst.loader === 'vanilla' ? `Minecraft ${inst.minecraft}` : `${LOADER_NAMES[inst.loader]} ${inst.minecraft}`
 }
 
 export function bytes(n: number): string {

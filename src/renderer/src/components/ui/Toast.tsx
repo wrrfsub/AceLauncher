@@ -44,7 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <Ctx.Provider value={api}>
       {children}
-      <div className="pointer-events-none fixed right-5 bottom-5 z-50 flex w-[360px] flex-col gap-2" aria-live="polite">
+      <div className="pointer-events-none fixed right-4 bottom-4 z-50 flex w-[320px] flex-col gap-2" aria-live="polite">
         <AnimatePresence initial={false}>
           {toasts.map((t) => {
             const Icon = ICONS[t.tone]
@@ -56,12 +56,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, x: 24, transition: { duration: 0.15 } }}
                 transition={{ type: 'spring', stiffness: 500, damping: 36 }}
-                className="pointer-events-auto flex items-start gap-3 rounded-xl border border-line-strong bg-surface-2 px-3.5 py-3 shadow-card"
+                className="pointer-events-auto flex items-start gap-2.5 rounded-lg border border-line-strong bg-surface-2 px-3 py-2.5 shadow-card"
                 role={t.tone === 'error' ? 'alert' : 'status'}
               >
                 <Icon className={`mt-px size-4 shrink-0 ${TONE[t.tone]}`} />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[13px] leading-snug font-medium selectable">{t.title}</p>
+                  <p className="text-xs leading-snug font-medium selectable">{t.title}</p>
                   {t.description && <p className="mt-0.5 text-xs text-text-2 selectable">{t.description}</p>}
                 </div>
                 <button onClick={() => dismiss(t.id)} className="text-text-3 hover:text-text" aria-label="Dismiss">

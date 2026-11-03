@@ -6,7 +6,8 @@ import { useApp, useInstancePhase } from '../state'
 import { Button } from './ui/Button'
 
 /** One button that knows whether to install, play, show progress or stop. */
-export function PlayButton({ inst, size = 'md', className }: { inst: Instance; size?: 'md' | 'lg'; className?: string }) {
+/** `quiet` drops the accent fill, for places where many instances are listed side by side. */
+export function PlayButton({ inst, size = 'md', quiet, className }: { inst: Instance; size?: 'sm' | 'md' | 'lg'; quiet?: boolean; className?: string }) {
   const { act } = useApp()
   const phase = useInstancePhase(inst)
 
@@ -20,8 +21,8 @@ export function PlayButton({ inst, size = 'md', className }: { inst: Instance; s
   if (phase.kind === 'installing' || phase.kind === 'launching') {
     const label = phase.kind === 'installing' ? `${percent(phase.task.progress, phase.task.total) || ''}${phase.task.total ? '%' : 'Preparing'}` : 'Starting'
     return (
-      <Button size={size} variant="primary" className={className} disabled>
-        <LoaderCircle className="size-4 animate-spin" />
+      <Button size={size} variant={quiet ? 'secondary' : 'primary'} className={className} disabled>
+        <LoaderCircle className="size-[15px] animate-spin" />
         {label}
       </Button>
     )
@@ -29,12 +30,12 @@ export function PlayButton({ inst, size = 'md', className }: { inst: Instance; s
   return (
     <Button
       size={size}
-      variant="primary"
+      variant={quiet ? 'secondary' : 'primary'}
       icon={phase.kind === 'ready' ? Play : Download}
       className={className}
       onClick={() => act(() => invoke('game:launch', inst.id))}
     >
-      {phase.kind === 'ready' ? 'Play' : 'Install & play'}
+      {phase.kind === 'ready' ? 'Play' : quiet ? 'Install' : 'Install & play'}
     </Button>
   )
 }

@@ -106,7 +106,7 @@ export function Select<T extends string>({
         aria-label={label}
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          'flex h-9 w-full items-center gap-2 rounded-lg border bg-surface px-3 text-left text-[13px] transition-colors disabled:opacity-45',
+          'flex h-8 w-full items-center gap-2 rounded-md border bg-surface px-2.5 text-left text-[13px] transition-colors disabled:opacity-45',
           open ? 'border-line-strong bg-surface-2' : 'border-line hover:border-line-strong',
         )}
       >
@@ -124,7 +124,7 @@ export function Select<T extends string>({
             exit={{ opacity: 0, transition: { duration: 0.08 } }}
             transition={{ duration: 0.14 }}
             className={cn(
-              'absolute z-30 w-full min-w-[200px] overflow-hidden rounded-xl border border-line-strong bg-surface-2 shadow-card',
+              'absolute z-30 w-full min-w-[200px] overflow-hidden rounded-lg border border-line-strong bg-surface-2 shadow-card',
               above ? 'bottom-full mb-1.5' : 'top-full mt-1.5',
             )}
           >
@@ -139,7 +139,7 @@ export function Select<T extends string>({
                     setActive(0)
                   }}
                   placeholder="Filter…"
-                  className="h-9 w-full bg-transparent text-[13px] outline-none placeholder:text-text-3"
+                  className="h-8 w-full bg-transparent text-[13px] outline-none placeholder:text-text-3"
                 />
               </div>
             )}
@@ -154,7 +154,7 @@ export function Select<T extends string>({
                   data-index={i}
                   onMouseEnter={() => setActive(i)}
                   onClick={() => pick(o)}
-                  className={cn('flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-[13px]', i === active && 'bg-surface-3')}
+                  className={cn('flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-[13px]', i === active && 'bg-surface-3')}
                 >
                   {o.icon}
                   <span className="min-w-0 flex-1 truncate">{o.label}</span>

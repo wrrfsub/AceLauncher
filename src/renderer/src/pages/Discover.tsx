@@ -9,7 +9,7 @@ import { Select } from '../components/ui/Select'
 import { invoke } from '../lib/ipc'
 import { compact, versionLabel } from '../lib/format'
 import { useApp, useFeatured } from '../state'
-import { PageHeader } from './Instances'
+import { ToolbarActions } from '../components/Toolbar'
 
 const TYPES: Array<{ value: ProjectType; label: string }> = [
   { value: 'mod', label: 'Mods' },
@@ -113,8 +113,8 @@ export function Discover({ instanceId, type }: { instanceId?: string; type?: Pro
   )
 
   return (
-    <div className="mx-auto max-w-[1180px] px-8 pt-2 pb-10">
-      <PageHeader title="Discover" subtitle="Mods, packs and shaders from Modrinth and CurseForge">
+    <div className="mx-auto max-w-[1120px] px-6 py-5">
+      <ToolbarActions>
         <Segmented
           value={source}
           onChange={setSource}
@@ -123,11 +123,11 @@ export function Discover({ instanceId, type }: { instanceId?: string; type?: Pro
             { value: 'curseforge', label: 'CurseForge', disabled: !info.curseforgeEnabled },
           ]}
         />
-      </PageHeader>
+      </ToolbarActions>
 
       <Tabs value={projectType} onChange={setProjectType} tabs={TYPES} />
 
-      <div className="mt-5 flex items-center gap-2">
+      <div className="mt-4 flex items-center gap-2">
         <Input
           className="flex-1"
           placeholder={`Search ${TYPES.find((t) => t.value === projectType)!.label.toLowerCase()}`}
@@ -153,7 +153,7 @@ export function Discover({ instanceId, type }: { instanceId?: string; type?: Pro
       </div>
       {target && projectType !== 'modpack' && (
         <p className="mt-2 text-xs text-text-3">
-          Showing results compatible with <span className="font-mono text-text-2">{versionLabel(target)}</span>
+          Showing results compatible with <span className="text-text-2">{versionLabel(target)}</span>
         </p>
       )}
       {!info.curseforgeEnabled && source === 'modrinth' && (
@@ -177,29 +177,29 @@ export function Discover({ instanceId, type }: { instanceId?: string; type?: Pro
           <Empty icon={<Search className="size-5" />} title="No results" />
         ) : (
           <>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1.5">
               {hits.map((h, i) => (
                 <motion.li
                   key={`${h.source}:${h.id}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: (i % PAGE) * 0.015 }}
-                  className="flex items-center gap-4 rounded-xl border border-line bg-surface p-3.5 transition-colors hover:border-line-strong"
+                  className="flex items-center gap-3 rounded-[10px] border border-line bg-surface p-2.5 transition-colors hover:border-line-strong"
                 >
                   {h.iconUrl ? (
-                    <img src={h.iconUrl} alt="" loading="lazy" className="size-14 shrink-0 rounded-xl bg-surface-3 object-cover" />
+                    <img src={h.iconUrl} alt="" loading="lazy" className="size-11 shrink-0 rounded-lg bg-surface-3 object-cover" />
                   ) : (
-                    <div className="grid size-14 shrink-0 place-items-center rounded-xl bg-surface-3 text-text-3">
+                    <div className="grid size-11 shrink-0 place-items-center rounded-lg bg-surface-3 text-text-3">
                       <Package className="size-5" />
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="flex items-baseline gap-2">
-                      <span className="truncate text-[14px] font-medium">{h.title}</span>
+                      <span className="truncate text-[13px] font-medium">{h.title}</span>
                       <span className="shrink-0 text-xs text-text-3">by {h.author}</span>
                     </p>
-                    <p className="mt-0.5 line-clamp-1 text-[13px] text-text-2">{h.description}</p>
-                    <p className="mt-1.5 flex items-center gap-3 text-[11px] text-text-3">
+                    <p className="mt-0.5 line-clamp-1 text-xs text-text-2">{h.description}</p>
+                    <p className="mt-1 flex items-center gap-3 text-[11px] text-text-3">
                       <span className="flex items-center gap-1">
                         <Download className="size-3" />
                         {compact(h.downloads)}
@@ -219,7 +219,7 @@ export function Discover({ instanceId, type }: { instanceId?: string; type?: Pro
                       Installed
                     </Button>
                   ) : (
-                    <Button size="sm" variant="primary" loading={installing.has(h.id)} icon={Download} onClick={() => install(h)}>
+                    <Button size="sm" loading={installing.has(h.id)} icon={Download} onClick={() => install(h)}>
                       Install
                     </Button>
                   )}

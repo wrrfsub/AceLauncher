@@ -7,15 +7,13 @@ import { Select } from '../components/ui/Select'
 import { ace, invoke } from '../lib/ipc'
 import { cn } from '../lib/format'
 import { useApp } from '../state'
-import { PageHeader } from './Instances'
 
-const ACCENT_SWATCH: Record<Accent, string> = { mint: '#5ee38b', amber: '#f5b544', azure: '#62adff', violet: '#a891ff', rose: '#ff7a8e' }
+const ACCENT_SWATCH: Record<Accent, string> = { diamond: '#57c7d4', emerald: '#3fc27a', amethyst: '#a98beb', gold: '#e8be4a', redstone: '#e5534b' }
 
 export function Settings() {
   return (
-    <div className="mx-auto max-w-[820px] px-8 pt-2 pb-16">
-      <PageHeader title="Settings" />
-      <div className="flex flex-col gap-8">
+    <div className="mx-auto max-w-[720px] px-6 py-5">
+      <div className="flex flex-col gap-6">
         <JavaSection />
         <GameSection />
         <AppearanceSection />
@@ -30,8 +28,8 @@ export function Settings() {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h2 className="mb-1 text-[11px] font-semibold tracking-[0.12em] text-text-3 uppercase">{title}</h2>
-      <div className="divide-y divide-line rounded-xl border border-line bg-surface px-5">{children}</div>
+      <h2 className="mb-2 text-[13px] font-semibold">{title}</h2>
+      <div className="divide-y divide-line rounded-[10px] border border-line bg-surface px-4">{children}</div>
     </section>
   )
 }
@@ -110,7 +108,7 @@ function GameSection() {
       <Row title="Memory" description={`Maximum heap for instances without their own setting. This computer has ${totalGb} GB.`}>
         <div className="flex w-80 items-center gap-3">
           <Slider label="Maximum memory" min={1024} max={cap} step={512} value={maxMemory} onChange={setMaxMemory} />
-          <span className="w-16 text-right font-mono text-xs tabular-nums">{(maxMemory / 1024).toFixed(1)} GB</span>
+          <span className="w-14 text-right text-xs tabular-nums">{(maxMemory / 1024).toFixed(1)} GB</span>
         </div>
         {maxMemory !== settings.maxMemory && (
           <Button size="sm" onClick={() => updateSettings({ maxMemory, minMemory: Math.min(settings.minMemory, maxMemory) })}>
@@ -145,7 +143,7 @@ function GameSection() {
       <Row title="Parallel downloads" description="Lower this on slow or metered connections.">
         <div className="flex w-56 items-center gap-3">
           <Slider label="Parallel downloads" min={1} max={64} step={1} value={concurrency} onChange={setConcurrency} />
-          <span className="w-6 text-right font-mono text-xs tabular-nums">{concurrency}</span>
+          <span className="w-6 text-right text-xs tabular-nums">{concurrency}</span>
         </div>
         {concurrency !== settings.maxConcurrentDownloads && (
           <Button size="sm" onClick={() => updateSettings({ maxConcurrentDownloads: concurrency })}>

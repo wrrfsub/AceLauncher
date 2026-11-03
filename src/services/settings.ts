@@ -2,7 +2,7 @@ import { app } from 'electron'
 import { join } from 'node:path'
 import { db } from '../database/index.ts'
 import { BRANDING } from '../shared/branding.ts'
-import type { Settings } from '../shared/types.ts'
+import { ACCENTS, type Settings } from '../shared/types.ts'
 
 function defaults(): Settings {
   return {
@@ -14,7 +14,7 @@ function defaults(): Settings {
     jvmArgs: '',
     maxConcurrentDownloads: 16,
     theme: 'dark',
-    accent: 'mint',
+    accent: 'diamond',
     reduceMotion: false,
     onLaunch: 'keep',
     autoCheckUpdates: true,
@@ -30,7 +30,10 @@ function defaults(): Settings {
 export function getSettings(): Settings {
   const rows = db().prepare('SELECT key, value FROM settings').all() as Array<{ key: string; value: string }>
   const stored = Object.fromEntries(rows.map((r) => [r.key, JSON.parse(r.value)]))
-  return { ...defaults(), ...stored }
+  const settings = { ...defaults(), ...stored }
+  // Accents were renamed to Minecraft materials; old picks fall back to the default.
+  if (!ACCENTS.includes(settings.accent)) settings.accent = 'diamond'
+  return settings
 }
 
 /** `patch` is validated by the IPC layer; unknown keys never reach here. */

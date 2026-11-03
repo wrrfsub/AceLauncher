@@ -14,8 +14,8 @@ const VARIANTS: Record<Variant, string> = {
 
 const SIZES: Record<Size, string> = {
   sm: 'h-7 px-2.5 text-xs gap-1.5 rounded-md',
-  md: 'h-9 px-3.5 text-[13px] gap-2 rounded-lg',
-  lg: 'h-12 px-6 text-[15px] gap-2.5 rounded-xl',
+  md: 'h-8 px-3 text-[13px] gap-1.5 rounded-md',
+  lg: 'h-10 px-5 text-sm gap-2 rounded-lg',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -29,7 +29,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   { variant = 'secondary', size = 'md', icon: Icon, loading, className, children, disabled, ...rest },
   ref,
 ) {
-  const iconSize = size === 'lg' ? 'size-[18px]' : size === 'sm' ? 'size-3.5' : 'size-4'
+  const iconSize = size === 'lg' ? 'size-4' : size === 'sm' ? 'size-3.5' : 'size-[15px]'
   return (
     <button
       ref={ref}
@@ -60,13 +60,13 @@ export function IconButton({
       aria-label={label}
       title={label}
       className={cn(
-        'no-drag inline-grid shrink-0 place-items-center rounded-lg text-text-2 transition-colors hover:bg-surface-2 hover:text-text disabled:pointer-events-none disabled:opacity-40',
-        size === 'sm' ? 'size-7' : 'size-9',
+        'no-drag inline-grid shrink-0 place-items-center rounded-md text-text-2 transition-colors hover:bg-surface-2 hover:text-text disabled:pointer-events-none disabled:opacity-40',
+        size === 'sm' ? 'size-7' : 'size-8',
         className,
       )}
       {...rest}
     >
-      <Icon className={size === 'sm' ? 'size-3.5' : 'size-4'} />
+      <Icon className={size === 'sm' ? 'size-3.5' : 'size-[15px]'} />
     </button>
   )
 }

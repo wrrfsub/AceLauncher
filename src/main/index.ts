@@ -18,7 +18,7 @@ function createWindow(): BrowserWindow {
     minWidth: 960,
     minHeight: 620,
     show: false,
-    backgroundColor: light ? '#f6f6f4' : '#0b0c0e',
+    backgroundColor: light ? '#f3f4f6' : '#17191e',
     titleBarStyle: 'hidden',
     ...(process.platform === 'darwin'
       ? { trafficLightPosition: { x: 16, y: 14 } }

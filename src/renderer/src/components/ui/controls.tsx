@@ -9,7 +9,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
   return (
     <div
       className={cn(
-        'no-drag flex h-9 items-center gap-2 rounded-lg border border-line bg-surface px-3 transition-colors focus-within:border-line-strong focus-within:bg-surface-2',
+        'no-drag flex h-8 items-center gap-2 rounded-md border border-line bg-surface px-2.5 transition-colors focus-within:border-line-strong focus-within:bg-surface-2',
         className,
       )}
     >
@@ -28,14 +28,14 @@ export function Switch({ checked, onChange, label, disabled }: { checked: boolea
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cn(
-        'no-drag relative h-[22px] w-[38px] shrink-0 rounded-full transition-colors disabled:opacity-40',
+        'no-drag relative h-[18px] w-8 shrink-0 rounded-full transition-colors disabled:opacity-40',
         checked ? 'bg-accent' : 'bg-surface-3',
       )}
     >
       <motion.span
         layout
         transition={{ type: 'spring', stiffness: 700, damping: 40 }}
-        className={cn('absolute top-[3px] size-4 rounded-full shadow-sm', checked ? 'right-[3px] bg-accent-ink' : 'left-[3px] bg-text-2')}
+        className={cn('absolute top-[3px] size-3 rounded-full', checked ? 'right-[3px] bg-accent-ink' : 'left-[3px] bg-text-2')}
       />
     </button>
   )
@@ -54,7 +54,7 @@ export function Segmented<T extends string>({
 }) {
   const id = useId()
   return (
-    <div className={cn('no-drag inline-flex rounded-lg border border-line bg-surface p-0.5', size === 'sm' ? 'h-8' : 'h-9')} role="radiogroup">
+    <div className={cn('no-drag inline-flex rounded-md border border-line bg-surface p-0.5', size === 'sm' ? 'h-7' : 'h-8')} role="radiogroup">
       {options.map((o) => (
         <button
           key={o.value}
@@ -63,12 +63,12 @@ export function Segmented<T extends string>({
           disabled={o.disabled}
           onClick={() => onChange(o.value)}
           className={cn(
-            'relative rounded-md px-3 text-[13px] font-medium transition-colors disabled:opacity-35',
+            'relative rounded-[5px] px-2.5 text-xs font-medium transition-colors disabled:opacity-35',
             value === o.value ? 'text-text' : 'text-text-3 hover:text-text-2',
           )}
         >
           {value === o.value && (
-            <motion.span layoutId={id} className="absolute inset-0 rounded-md bg-surface-3" transition={{ type: 'spring', stiffness: 600, damping: 45 }} />
+            <motion.span layoutId={id} className="absolute inset-0 rounded-[5px] bg-surface-3" transition={{ type: 'spring', stiffness: 600, damping: 45 }} />
           )}
           <span className="relative">{o.label}</span>
         </button>
@@ -80,14 +80,14 @@ export function Segmented<T extends string>({
 export function Tabs<T extends string>({ value, tabs, onChange }: { value: T; tabs: Array<{ value: NoInfer<T>; label: string; count?: number }>; onChange(v: NoInfer<T>): void }) {
   const id = useId()
   return (
-    <div className="flex gap-5 border-b border-line" role="tablist">
+    <div className="flex gap-4 border-b border-line" role="tablist">
       {tabs.map((t) => (
         <button
           key={t.value}
           role="tab"
           aria-selected={value === t.value}
           onClick={() => onChange(t.value)}
-          className={cn('relative pb-2.5 text-[13px] font-medium transition-colors', value === t.value ? 'text-text' : 'text-text-3 hover:text-text-2')}
+          className={cn('relative pb-2 text-[13px] font-medium transition-colors', value === t.value ? 'text-text' : 'text-text-3 hover:text-text-2')}
         >
           {t.label}
           {t.count !== undefined && <span className="ml-1.5 text-text-3 tabular-nums">{t.count}</span>}
@@ -152,13 +152,13 @@ export function Badge({ children, tone = 'default', className }: { children: Rea
     warn: 'bg-warn/14 text-warn',
     danger: 'bg-danger/14 text-danger',
   }
-  return <span className={cn('inline-flex h-5 items-center rounded-md px-1.5 text-[11px] font-medium', tones[tone], className)}>{children}</span>
+  return <span className={cn('inline-flex h-[18px] items-center rounded px-1.5 text-[11px] font-medium whitespace-nowrap', tones[tone], className)}>{children}</span>
 }
 
 /** Label + description on the left, a control on the right: the building block of settings forms. */
 export function Row({ title, description, children }: { title: string; description?: ReactNode; children: ReactNode }) {
   return (
-    <div className="flex items-center justify-between gap-8 py-4">
+    <div className="flex items-center justify-between gap-8 py-3">
       <div className="min-w-0">
         <p className="text-[13px] font-medium">{title}</p>
         {description && <p className="mt-0.5 text-xs text-text-3">{description}</p>}
@@ -170,10 +170,10 @@ export function Row({ title, description, children }: { title: string; descripti
 
 export function Empty({ icon, title, children }: { icon: ReactNode; title: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-      <div className="mb-4 grid size-11 place-items-center rounded-xl border border-line bg-surface text-text-3">{icon}</div>
-      <p className="text-sm font-medium">{title}</p>
-      {children && <div className="mt-1.5 max-w-sm text-[13px] text-text-3">{children}</div>}
+    <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
+      <div className="mb-3 grid size-9 place-items-center rounded-lg border border-line bg-surface text-text-3">{icon}</div>
+      <p className="text-[13px] font-medium">{title}</p>
+      {children && <div className="mt-1 max-w-sm text-xs text-text-3">{children}</div>}
     </div>
   )
 }

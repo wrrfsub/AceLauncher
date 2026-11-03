@@ -8,7 +8,7 @@ import { Select } from '../components/ui/Select'
 import { ace, invoke } from '../lib/ipc'
 import { cn } from '../lib/format'
 import { useApp, useFeatured } from '../state'
-import { PageHeader } from './Instances'
+import { ToolbarActions } from '../components/Toolbar'
 
 type Level = LogLine['level']
 const LEVELS: Level[] = ['info', 'warn', 'error', 'debug']
@@ -64,17 +64,17 @@ export function Console({ instanceId }: { instanceId?: string }) {
   }
 
   return (
-    <div className="mx-auto flex h-full max-w-[1180px] flex-col px-8 pt-2 pb-6">
-      <PageHeader title="Console" subtitle="Live output from Minecraft and the launcher">
+    <div className="mx-auto flex h-full max-w-[1120px] flex-col px-6 py-4">
+      <ToolbarActions>
         <Select
           className="w-64"
           label="Instance"
           placeholder="Pick an instance"
           value={selected}
           onChange={setSelected}
-          options={instances.map((i) => ({ value: i.id, label: i.name, icon: <InstanceIcon inst={i} size={18} />, hint: statuses[i.id]?.state === 'running' ? 'running' : undefined }))}
+          options={instances.map((i) => ({ value: i.id, label: i.name, icon: <InstanceIcon inst={i} size={16} />, hint: statuses[i.id]?.state === 'running' ? 'running' : undefined }))}
         />
-      </PageHeader>
+      </ToolbarActions>
 
       {!inst ? (
         <Empty icon={<SquareTerminal className="size-5" />} title="No instance selected" />
@@ -117,14 +117,14 @@ export function Console({ instanceId }: { instanceId?: string }) {
             )}
           </div>
 
-          <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl border border-line bg-[color-mix(in_srgb,var(--bg)_70%,black)]">
+          <div className="relative min-h-0 flex-1 overflow-hidden rounded-[10px] border border-line bg-[color-mix(in_srgb,var(--bg)_65%,black)]">
             <div
               ref={scroller}
               onScroll={(e) => {
                 const el = e.currentTarget
                 setFollow(el.scrollHeight - el.scrollTop - el.clientHeight < 40)
               }}
-              className="h-full overflow-y-auto px-4 py-3 font-mono text-[12px] leading-[1.6] selectable"
+              className="h-full overflow-y-auto px-3.5 py-3 font-mono text-[11.5px] leading-[1.6] selectable"
             >
               {shown.length === 0 ? (
                 <p className="py-10 text-center font-sans text-[13px] text-text-3">{lines.length ? 'No lines match the filters.' : 'No output yet. Launch the game to see its log here.'}</p>

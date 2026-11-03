@@ -50,22 +50,22 @@ export function Dialog({
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            className="relative flex max-h-full w-full flex-col overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-card"
+            className="relative flex max-h-full w-full flex-col overflow-hidden rounded-xl border border-line-strong bg-surface shadow-card"
             style={{ maxWidth: width }}
             initial={{ opacity: 0, y: 10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98, transition: { duration: 0.12 } }}
             transition={{ type: 'spring', stiffness: 520, damping: 38 }}
           >
-            <div className="flex items-start justify-between gap-4 px-6 pt-5 pb-1">
+            <div className="flex items-start justify-between gap-4 px-5 pt-4">
               <div>
-                <h2 className="text-base font-semibold tracking-tight">{title}</h2>
-                {description && <p className="mt-1 text-[13px] text-text-3">{description}</p>}
+                <h2 className="text-[15px] font-semibold">{title}</h2>
+                {description && <p className="mt-0.5 text-xs text-text-3">{description}</p>}
               </div>
               <IconButton icon={X} label="Close" size="sm" onClick={onClose} className="-mr-2" />
             </div>
-            <div className="min-h-0 overflow-y-auto px-6 py-4">{children}</div>
-            {footer && <div className="flex justify-end gap-2 border-t border-line bg-raised/50 px-6 py-3.5">{footer}</div>}
+            <div className="min-h-0 overflow-y-auto px-5 py-4">{children}</div>
+            {footer && <div className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</div>}
           </motion.div>
         </div>
       )}

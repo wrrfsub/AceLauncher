@@ -51,7 +51,7 @@ export type InstancePatch = Partial<
   Pick<Instance, 'name' | 'javaPath' | 'minMemory' | 'maxMemory' | 'jvmArgs' | 'gameArgs' | 'icon'>
 >
 
-export const ACCENTS = ['mint', 'amber', 'azure', 'violet', 'rose'] as const
+export const ACCENTS = ['diamond', 'emerald', 'amethyst', 'gold', 'redstone'] as const
 export type Accent = (typeof ACCENTS)[number]
 
 export interface Settings {

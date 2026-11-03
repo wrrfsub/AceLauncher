@@ -1,60 +1,61 @@
-@import '@fontsource-variable/geist';
+@import '@fontsource-variable/onest';
 @import '@fontsource-variable/geist-mono';
 @import 'tailwindcss';
 
 /*
- * Design tokens. Components only use these (via the Tailwind theme below), so themes and accents
- * are a matter of swapping variables.
+ * "Deepslate" tokens. Components only use these (via the Tailwind theme below), so themes and
+ * material accents are a matter of swapping variables.
  */
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
-  --bg: #0b0c0e;
-  --bg-raised: #0f1013;
-  --surface: #141519;
-  --surface-2: #1a1b20;
-  --surface-3: #22242a;
-  --line: rgb(255 255 255 / 0.06);
+  --bg: #17191e;
+  --bg-raised: #13151a;
+  --surface: #1e2127;
+  --surface-2: #252931;
+  --surface-3: #2e333c;
+  --line: rgb(255 255 255 / 0.065);
   --line-strong: rgb(255 255 255 / 0.11);
-  --text: #ececee;
-  --text-2: #a3a4ab;
-  --text-3: #6c6e76;
-  --danger: #f27272;
-  --warn: #f2b84b;
-  --ok: #5ee38b;
-  --scrim: rgb(5 6 8 / 0.72);
-  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 16px 40px -12px rgb(0 0 0 / 0.6);
+  --text: #e6e8ec;
+  --text-2: #a2a7b1;
+  --text-3: #6e7480;
+  --danger: #ef6a63;
+  --warn: #e8b64c;
+  --ok: #52c98a;
+  --scrim: rgb(8 9 12 / 0.6);
+  --shadow: 0 0 0 1px rgb(0 0 0 / 0.25), 0 12px 32px -8px rgb(0 0 0 / 0.55);
 }
 
 [data-theme='light'] {
   color-scheme: light;
-  --bg: #f5f5f3;
-  --bg-raised: #eeeeeb;
+  --bg: #f3f4f6;
+  --bg-raised: #e9ebef;
   --surface: #ffffff;
-  --surface-2: #f2f2ef;
-  --surface-3: #e7e7e3;
-  --line: rgb(0 0 0 / 0.07);
-  --line-strong: rgb(0 0 0 / 0.12);
-  --text: #131316;
-  --text-2: #55565d;
-  --text-3: #8b8c92;
-  --danger: #d4423f;
-  --warn: #b7791f;
-  --ok: #1f9d55;
-  --scrim: rgb(20 20 24 / 0.4);
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.18);
+  --surface-2: #f1f2f5;
+  --surface-3: #e4e6eb;
+  --line: rgb(16 20 30 / 0.08);
+  --line-strong: rgb(16 20 30 / 0.14);
+  --text: #15181e;
+  --text-2: #4f5563;
+  --text-3: #858b97;
+  --danger: #cf3f37;
+  --warn: #a8700f;
+  --ok: #1d8a52;
+  --scrim: rgb(20 24 32 / 0.32);
+  --shadow: 0 0 0 1px rgb(16 20 30 / 0.06), 0 12px 32px -10px rgb(16 20 30 / 0.22);
 }
 
-[data-accent='mint'] { --accent: #5ee38b; --accent-ink: #062611; }
-[data-accent='amber'] { --accent: #f5b544; --accent-ink: #2b1a00; }
-[data-accent='azure'] { --accent: #62adff; --accent-ink: #001a38; }
-[data-accent='violet'] { --accent: #a891ff; --accent-ink: #160a3d; }
-[data-accent='rose'] { --accent: #ff7a8e; --accent-ink: #3a0610; }
-[data-theme='light'][data-accent='mint'] { --accent: #1c9a52; --accent-ink: #ffffff; }
-[data-theme='light'][data-accent='amber'] { --accent: #c47f12; --accent-ink: #ffffff; }
-[data-theme='light'][data-accent='azure'] { --accent: #1f6fd1; --accent-ink: #ffffff; }
-[data-theme='light'][data-accent='violet'] { --accent: #6a4ed6; --accent-ink: #ffffff; }
-[data-theme='light'][data-accent='rose'] { --accent: #d1435b; --accent-ink: #ffffff; }
+/* Accents are Minecraft materials. */
+[data-accent='diamond'] { --accent: #57c7d4; --accent-ink: #062126; }
+[data-accent='emerald'] { --accent: #3fc27a; --accent-ink: #04210f; }
+[data-accent='amethyst'] { --accent: #a98beb; --accent-ink: #1a0f38; }
+[data-accent='gold'] { --accent: #e8be4a; --accent-ink: #2a1d00; }
+[data-accent='redstone'] { --accent: #e5534b; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='diamond'] { --accent: #138a99; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='emerald'] { --accent: #17924f; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='amethyst'] { --accent: #7350c9; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='gold'] { --accent: #a97a07; --accent-ink: #ffffff; }
+[data-theme='light'][data-accent='redstone'] { --accent: #c9352d; --accent-ink: #ffffff; }
 
 @theme inline {
   --color-bg: var(--bg);
@@ -74,7 +75,7 @@
   --color-ok: var(--ok);
   --color-scrim: var(--scrim);
   --shadow-card: var(--shadow);
-  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Onest Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
 }
 
@@ -89,8 +90,9 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.45;
+  font-feature-settings: 'tnum' 0;
   -webkit-font-smoothing: antialiased;
   user-select: none;
   overflow: hidden;
@@ -133,8 +135,8 @@ input[type='range'] {
 }
 input[type='range']::-webkit-slider-thumb {
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 999px;
   background: var(--text);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--bg) 70%, transparent);

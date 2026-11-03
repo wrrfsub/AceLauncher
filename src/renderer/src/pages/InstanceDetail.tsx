@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { ChevronLeft, Compass, FolderOpen, Package, SquareTerminal, Trash2, Wrench } from 'lucide-react'
+import { Compass, FolderOpen, Package, SquareTerminal, Trash2, Wrench } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import type { ContentKind, Instance, InstancePatch, InstalledContent, JavaRuntime } from '@shared/types'
 import { InstanceIcon } from '../components/InstanceIcon'
@@ -30,26 +30,19 @@ export function InstanceDetail({ id, tab: initialTab }: { id: string; tab?: 'con
   }
 
   return (
-    <div className="mx-auto max-w-[1180px] px-8 pt-2 pb-10">
-      <button onClick={() => navigate({ page: 'instances' })} className="mb-4 flex items-center gap-1 text-xs text-text-3 hover:text-text-2">
-        <ChevronLeft className="size-3.5" />
-        Instances
-      </button>
-
-      <div className="flex items-center gap-5">
-        <InstanceIcon inst={inst} size={64} />
+    <div className="mx-auto max-w-[1120px] px-6 py-5">
+      <div className="flex items-center gap-4">
+        <InstanceIcon inst={inst} size={52} />
         <div className="min-w-0 flex-1">
-          <h1 className="truncate text-[26px] font-semibold tracking-[-0.02em]">{inst.name}</h1>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[13px] text-text-2">
+          <h1 className="truncate text-lg font-semibold">{inst.name}</h1>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-text-2">
             <Badge>Minecraft {inst.minecraft}</Badge>
             {inst.loader !== 'vanilla' && (
               <Badge>
                 {LOADER_NAMES[inst.loader]} {inst.loaderVersion}
               </Badge>
             )}
-            <span className="text-text-3">
-              {duration(inst.playTime)} played · {inst.lastPlayedAt ? `last ${ago(inst.lastPlayedAt)}` : 'never played'}
-            </span>
+            <span className="ml-1 text-text-3">{inst.lastPlayedAt ? `${duration(inst.playTime)} played, last ${ago(inst.lastPlayedAt)}` : 'Not played yet'}</span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
@@ -62,11 +55,11 @@ export function InstanceDetail({ id, tab: initialTab }: { id: string; tab?: 'con
             onClick={() => act(() => invoke('instances:repair', id), 'Instance repaired')}
           />
           <IconButton icon={Trash2} label="Delete instance" disabled={busy} onClick={() => setConfirmDelete(true)} className="hover:text-danger" />
-          <PlayButton inst={inst} className="ml-2 min-w-[120px]" />
+          <PlayButton inst={inst} className="ml-1.5 min-w-[108px]" />
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-5">
         <Tabs
           value={tab}
           onChange={setTab}
@@ -78,7 +71,7 @@ export function InstanceDetail({ id, tab: initialTab }: { id: string; tab?: 'con
       </div>
 
       <AnimatePresence mode="wait">
-        <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="pt-6">
+        <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="pt-4">
           {tab === 'content' ? <ContentTab inst={inst} /> : <SettingsTab inst={inst} />}
         </motion.div>
       </AnimatePresence>
@@ -133,7 +126,7 @@ function ContentTab({ inst }: { inst: Instance }) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <Segmented size="sm" value={kind} onChange={setKind} options={kinds.map((k) => ({ value: k, label: KIND_LABEL[k] }))} />
+        <Segmented value={kind} onChange={setKind} options={kinds.map((k) => ({ value: k, label: KIND_LABEL[k] }))} />
         <div className="flex gap-2">
           <Button size="sm" variant="ghost" icon={FolderOpen} onClick={() => act(() => invoke('instances:openFolder', { id: inst.id, sub: KIND_DIR[kind] }))}>
             Open folder
@@ -144,7 +137,7 @@ function ContentTab({ inst }: { inst: Instance }) {
         </div>
       </div>
 
-      <div className="rounded-xl border border-line bg-surface">
+      <div className="rounded-[10px] border border-line bg-surface">
         {items === null ? (
           <div className="h-40 animate-pulse" />
         ) : items.length === 0 ? (
@@ -154,7 +147,7 @@ function ContentTab({ inst }: { inst: Instance }) {
         ) : (
           <ul className="divide-y divide-line">
             {items.map((c) => (
-              <li key={c.fileName} className="flex items-center gap-3 px-4 py-2.5">
+              <li key={c.fileName} className="flex items-center gap-3 px-3 py-2">
                 {c.iconUrl ? (
                   <img src={c.iconUrl} alt="" className="size-8 rounded-md object-cover" loading="lazy" />
                 ) : (
@@ -164,9 +157,9 @@ function ContentTab({ inst }: { inst: Instance }) {
                 )}
                 <div className={`min-w-0 flex-1 ${c.enabled ? '' : 'opacity-50'}`}>
                   <p className="truncate text-[13px] font-medium">{c.title ?? c.fileName}</p>
-                  <p className="truncate font-mono text-[11px] text-text-3">
+                  <p className="truncate text-[11px] text-text-3">
                     {c.title ? c.fileName : ''}
-                    {c.versionNumber ? `${c.title ? ' · ' : ''}${c.versionNumber}` : ''}
+                    {c.versionNumber ? `${c.title ? ', ' : ''}${c.versionNumber}` : ''}
                   </p>
                 </div>
                 {c.source && <Badge>{c.source === 'modrinth' ? 'Modrinth' : 'CurseForge'}</Badge>}
@@ -217,7 +210,7 @@ function SettingsTab({ inst }: { inst: Instance }) {
   ]
 
   return (
-    <div className="max-w-[760px] divide-y divide-line">
+    <div className="max-w-[720px] divide-y divide-line">
       <Row title="Name">
         <Input className="w-72" value={name} maxLength={64} onChange={(e) => setName(e.target.value)} onBlur={() => name.trim() && name !== inst.name && save({ name })} />
       </Row>
@@ -232,7 +225,7 @@ function SettingsTab({ inst }: { inst: Instance }) {
       {inst.maxMemory !== null && (
         <div className="flex items-center gap-4 pb-4">
           <Slider label="Maximum memory" min={1024} max={memoryCap} step={512} value={maxMemory} onChange={setMaxMemory} />
-          <span className="w-20 text-right font-mono text-xs tabular-nums">{maxMemory} MB</span>
+          <span className="w-20 text-right text-xs tabular-nums">{(maxMemory / 1024).toFixed(1)} GB</span>
           <Button size="sm" disabled={maxMemory === inst.maxMemory} onClick={() => save({ maxMemory })}>
             Apply
           </Button>

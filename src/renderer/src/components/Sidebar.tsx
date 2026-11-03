@@ -9,49 +9,56 @@ import { SkinHead } from './SkinHead'
 import { Progress } from './ui/controls'
 import { useToast } from './ui/Toast'
 
-const NAV: Array<{ page: Route['page']; label: string; icon: ComponentType<{ className?: string }> }> = [
+type NavItem = { page: Route['page']; label: string; icon: ComponentType<{ className?: string }> }
+
+const MAIN_NAV: NavItem[] = [
   { page: 'home', label: 'Home', icon: House },
   { page: 'instances', label: 'Instances', icon: Boxes },
   { page: 'discover', label: 'Discover', icon: Compass },
   { page: 'console', label: 'Console', icon: SquareTerminal },
-  { page: 'settings', label: 'Settings', icon: Settings },
 ]
 
+function NavButton({ item, current }: { item: NavItem; current: string }) {
+  const { navigate, instances } = useApp()
+  const { page, label, icon: Icon } = item
+  const active = current === page
+  return (
+    <button
+      onClick={() => navigate({ page } as Route)}
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        'relative flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] transition-colors',
+        active ? 'font-medium text-text' : 'text-text-2 hover:bg-surface hover:text-text',
+      )}
+    >
+      {active && <motion.span layoutId="nav-active" className="absolute inset-0 rounded-md bg-surface-2" transition={{ type: 'spring', stiffness: 600, damping: 45 }} />}
+      <Icon className={cn('relative size-[15px]', active ? 'text-accent' : 'text-text-3')} />
+      <span className="relative">{label}</span>
+      {page === 'instances' && instances.length > 0 && <span className="relative ml-auto text-[11px] text-text-3 tabular-nums">{instances.length}</span>}
+    </button>
+  )
+}
+
 export function Sidebar() {
-  const { route, navigate, info } = useApp()
+  const { route, info } = useApp()
   const current = route.page === 'instance' ? 'instances' : route.page
   return (
-    <aside className="flex w-[228px] shrink-0 flex-col border-r border-line bg-raised">
-      <div className={cn('drag flex h-14 items-center gap-2.5 px-4', info.platform === 'darwin' && 'mt-7')}>
-        <Logo size={26} />
-        <span className="text-[15px] font-semibold tracking-tight">Ace Launcher</span>
+    <aside className="flex w-[208px] shrink-0 flex-col border-r border-line bg-raised">
+      <div className={cn('drag flex h-11 shrink-0 items-center gap-2 px-4', info.platform === 'darwin' && 'mt-6')}>
+        <Logo size={20} />
+        <span className="text-[13px] font-semibold">Ace Launcher</span>
       </div>
 
-      <nav className="mt-2 flex flex-col gap-0.5 px-2.5">
-        {NAV.map(({ page, label, icon: Icon }) => (
-          <button
-            key={page}
-            onClick={() => navigate({ page } as Route)}
-            className={cn(
-              'relative flex h-9 items-center gap-3 rounded-lg px-3 text-[13px] font-medium transition-colors',
-              current === page ? 'text-text' : 'text-text-3 hover:bg-surface hover:text-text-2',
-            )}
-          >
-            {current === page && (
-              <motion.span
-                layoutId="nav-active"
-                className="absolute inset-0 rounded-lg bg-surface-2"
-                transition={{ type: 'spring', stiffness: 600, damping: 45 }}
-              />
-            )}
-            <Icon className={cn('relative size-4', current === page && 'text-accent')} />
-            <span className="relative">{label}</span>
-          </button>
+      <nav className="mt-2 flex flex-col gap-px px-2">
+        {MAIN_NAV.map((item) => (
+          <NavButton key={item.page} item={item} current={current} />
         ))}
       </nav>
 
-      <div className="mt-auto flex flex-col gap-2 p-2.5">
+      <div className="mt-auto flex flex-col gap-2 p-2">
         <TaskTray />
+        <NavButton item={{ page: 'settings', label: 'Settings', icon: Settings }} current={current} />
+        <div className="h-px bg-line" />
         <AccountMenu />
       </div>
     </aside>
@@ -70,7 +77,7 @@ function TaskTray() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, height: 0, marginTop: -8 }}
-          className="rounded-xl border border-line bg-surface p-3"
+          className="rounded-lg border border-line bg-surface p-2.5"
         >
           <div className="flex items-start gap-2">
             <div className="min-w-0 flex-1">
@@ -133,7 +140,7 @@ function AccountMenu() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4, transition: { duration: 0.1 } }}
             transition={{ duration: 0.15 }}
-            className="absolute bottom-full left-0 z-30 mb-2 w-full overflow-hidden rounded-xl border border-line-strong bg-surface-2 p-1 shadow-card"
+            className="absolute bottom-full left-0 z-30 mb-2 w-full overflow-hidden rounded-lg border border-line-strong bg-surface-2 p-1 shadow-card"
           >
             {accounts.map((a) => (
               <div key={a.id} className="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 hover:bg-surface-3">
@@ -166,8 +173,8 @@ function AccountMenu() {
       </AnimatePresence>
 
       {active ? (
-        <button onClick={() => setOpen((o) => !o)} className="flex w-full items-center gap-2.5 rounded-xl px-2 py-2 text-left hover:bg-surface">
-          <SkinHead skinUrl={active.skinUrl} size={30} />
+        <button onClick={() => setOpen((o) => !o)} className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left hover:bg-surface">
+          <SkinHead skinUrl={active.skinUrl} size={26} />
           <div className="min-w-0 flex-1">
             <p className="truncate text-[13px] font-medium">{active.name}</p>
             <p className={cn('text-[11px]', active.needsReauth ? 'text-warn' : 'text-text-3')}>{active.needsReauth ? 'Sign in again' : 'Microsoft account'}</p>
@@ -177,9 +184,9 @@ function AccountMenu() {
         <button
           onClick={accounts.length ? () => setOpen((o) => !o) : signIn}
           disabled={busy}
-          className="flex w-full items-center gap-2.5 rounded-xl border border-dashed border-line-strong px-3 py-2.5 text-left text-[13px] text-text-2 hover:border-text-3 hover:text-text disabled:opacity-50"
+          className="flex h-9 w-full items-center gap-2.5 rounded-md bg-surface px-2.5 text-left text-[13px] text-text-2 hover:bg-surface-2 hover:text-text disabled:opacity-50"
         >
-          <LogIn className="size-4" />
+          <LogIn className="size-[15px] text-accent" />
           {busy ? 'Waiting for Microsoft…' : 'Sign in to play'}
         </button>
       )}
