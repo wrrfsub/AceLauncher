@@ -1,0 +1,50 @@
+{
+  "name": "ace-launcher",
+  "productName": "Ace Launcher",
+  "version": "0.1.0",
+  "description": "A modern Minecraft launcher",
+  "author": "Ace Launcher",
+  "license": "MIT",
+  "main": "./out/main/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "test": "node --test --experimental-strip-types src/**/*.test.ts",
+    "start": "electron-vite preview",
+    "dist": "npm run build && electron-builder",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac"
+  },
+  "dependencies": {
+    "@xmcl/core": "^2.16.3",
+    "@xmcl/installer": "^6.3.7",
+    "@xmcl/unzip": "file:vendor/xmcl-unzip",
+    "electron-updater": "^6.8.11",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.4",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^6.0.0",
+    "lucide-react": "^1.67.0",
+    "motion": "^14.9.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.4",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.5"
+  },
+  "overrides": {
+    "@xmcl/unzip": "$@xmcl/unzip"
+  }
+}

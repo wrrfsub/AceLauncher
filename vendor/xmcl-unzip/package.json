@@ -1,0 +1,10 @@
+{
+  "name": "@xmcl/unzip",
+  "version": "2.2.0-ace.1",
+  "description": "Vendored @xmcl/unzip 2.2.0 (MIT, Voxelum/x-minecraft-launcher). The npm release ships main: ./index.ts and a workspace: dependency; this copy only fixes package.json. Drop it once upstream republishes.",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "dependencies": { "@xmcl/yauzl": "^2.10.0" }
+}
