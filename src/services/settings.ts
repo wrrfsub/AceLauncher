@@ -16,6 +16,7 @@ function defaults(): Settings {
     theme: 'dark',
     accent: 'diamond',
     reduceMotion: false,
+    uiScale: 'auto',
     onLaunch: 'keep',
     autoCheckUpdates: true,
     allowPrerelease: false,

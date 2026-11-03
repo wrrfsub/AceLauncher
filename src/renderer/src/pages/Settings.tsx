@@ -186,6 +186,21 @@ function AppearanceSection() {
           ))}
         </div>
       </Row>
+      <Row title="Interface size" description="Auto grows the interface with the window, so it stays readable when maximized.">
+        <Segmented
+          size="sm"
+          value={settings.uiScale}
+          onChange={(v) => updateSettings({ uiScale: v })}
+          options={[
+            { value: 'auto', label: 'Auto' },
+            { value: '90', label: '90%' },
+            { value: '100', label: '100%' },
+            { value: '110', label: '110%' },
+            { value: '125', label: '125%' },
+            { value: '150', label: '150%' },
+          ]}
+        />
+      </Row>
       <Row title="Reduce motion" description="Turns off most animations.">
         <Switch label="Reduce motion" checked={settings.reduceMotion} onChange={(v) => updateSettings({ reduceMotion: v })} />
       </Row>

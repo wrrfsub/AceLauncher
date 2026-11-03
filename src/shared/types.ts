@@ -52,6 +52,10 @@ export type InstancePatch = Partial<
 >
 
 export const ACCENTS = ['diamond', 'emerald', 'amethyst', 'gold', 'redstone'] as const
+
+/** Interface size: 'auto' scales with the window, numbers are fixed percentages. */
+export const UI_SCALES = ['auto', '90', '100', '110', '125', '150'] as const
+export type UiScale = (typeof UI_SCALES)[number]
 export type Accent = (typeof ACCENTS)[number]
 
 export interface Settings {
@@ -66,6 +70,7 @@ export interface Settings {
   theme: 'dark' | 'light' | 'system'
   accent: Accent
   reduceMotion: boolean
+  uiScale: UiScale
   onLaunch: 'keep' | 'minimize'
   autoCheckUpdates: boolean
   allowPrerelease: boolean

@@ -16,7 +16,7 @@ import { curseforgeApiKey, getSettings, msClientId, updateSettings } from '../se
 import { cancelTask, listTasks } from '../services/tasks.ts'
 import { BRANDING } from '../shared/branding.ts'
 import type { InvokeChannel, IpcApi, IpcResult } from '../shared/ipc.ts'
-import { ACCENTS, CONTENT_KINDS, LOADERS } from '../shared/types.ts'
+import { ACCENTS, CONTENT_KINDS, LOADERS, UI_SCALES } from '../shared/types.ts'
 import { checkForUpdates, downloadUpdate, installUpdate, updateState } from './updater.ts'
 
 type Arg<K extends InvokeChannel> = Parameters<IpcApi[K]>[0]
@@ -65,6 +65,7 @@ const settingsPatch = z
     theme: z.enum(['dark', 'light', 'system']),
     accent: z.enum(ACCENTS),
     reduceMotion: z.boolean(),
+    uiScale: z.enum(UI_SCALES),
     onLaunch: z.enum(['keep', 'minimize']),
     autoCheckUpdates: z.boolean(),
     allowPrerelease: z.boolean(),
@@ -96,6 +97,7 @@ export function registerIpc(): void {
   handle('settings:set', settingsPatch, (patch) => {
     const next = updateSettings(patch)
     if (patch.theme) applyTitleBarTheme()
+    if (patch.uiScale) BrowserWindow.getAllWindows().forEach(applyZoom)
     if ('discordPresence' in patch || 'discordClientId' in patch) syncDiscord()
     return next
   })
@@ -216,6 +218,19 @@ export function registerIpc(): void {
   handle('updates:download', none, downloadUpdate)
   handle('updates:install', none, installUpdate)
 
+}
+
+/**
+ * Scales the whole interface like a game UI: designed at 1280×800 and grown with the window
+ * (up to 150%) so a maximized window isn't a sea of tiny controls. A fixed size in Settings wins.
+ */
+export function applyZoom(win: BrowserWindow): void {
+  if (win.isDestroyed()) return
+  const scale = getSettings().uiScale
+  const [w = 1280, h = 800] = win.getContentSize()
+  const auto = Math.min(1.5, Math.max(1, Math.min(w / 1280, h / 800)))
+  const factor = scale === 'auto' ? Math.round(auto * 20) / 20 : Number(scale) / 100
+  if (win.webContents.getZoomFactor() !== factor) win.webContents.setZoomFactor(factor)
 }
 
 /** Keeps the native window-control glyphs readable when the theme changes (Windows/Linux overlay). */

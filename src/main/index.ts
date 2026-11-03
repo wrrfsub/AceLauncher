@@ -5,7 +5,7 @@ import { openDatabase } from '../database/index.ts'
 import { initDiscord } from '../services/discord.ts'
 import { getSettings } from '../services/settings.ts'
 import { setAppVersion } from '../utils/http.ts'
-import { applyTitleBarTheme, registerIpc } from './ipc.ts'
+import { applyTitleBarTheme, applyZoom, registerIpc } from './ipc.ts'
 import { initUpdater } from './updater.ts'
 
 if (!app.requestSingleInstanceLock()) app.quit()
@@ -35,6 +35,8 @@ function createWindow(): BrowserWindow {
   })
 
   win.once('ready-to-show', () => win.show())
+  win.webContents.on('did-finish-load', () => applyZoom(win))
+  win.on('resize', () => applyZoom(win))
 
   // The renderer never opens windows or navigates away; real links go to the system browser.
   win.webContents.setWindowOpenHandler(({ url }) => {
