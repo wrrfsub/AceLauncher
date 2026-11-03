@@ -132,6 +132,7 @@ vendor/
   ELECTRON_RUN_AS_NODE=1 ./node_modules/.bin/electron --experimental-strip-types path/to/script.ts
   ```
 - **Vendored `@xmcl/unzip`.** The npm release of 2.2.0 points `main` at `./index.ts` and depends on `workspace:^*`, so it can't be installed. `vendor/xmcl-unzip` is the same build with a corrected `package.json`. Remove it once upstream publishes a fixed release.
+- Loader logos in `src/renderer/src/assets/loaders` are the Fabric, Forge, NeoForge and Quilt projects' own marks (their GitHub organisation avatars), used only to show which loader an instance runs. The vanilla grass block is original art.
 - Main-process code uses relative `.ts` imports, so the pure modules run directly under `node --test`.
 
 ## TODO
