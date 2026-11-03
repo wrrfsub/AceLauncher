@@ -22,7 +22,7 @@ function createWindow(): BrowserWindow {
     ...(process.platform === 'darwin'
       ? { trafficLightPosition: { x: 16, y: 14 } }
       : { titleBarOverlay: { color: '#00000000', symbolColor: light ? '#3f3f46' : '#a1a1aa', height: 40 } }),
-    icon: join(import.meta.dirname, '../../build/icon.png'),
+    icon: app.isPackaged ? join(process.resourcesPath, 'icon.png') : join(import.meta.dirname, '../../build/icon.png'),
     webPreferences: {
       preload: join(import.meta.dirname, '../preload/index.cjs'),
       contextIsolation: true,

@@ -46,6 +46,28 @@ npm test
 npm run dev
 ```
 
+## Building installers
+
+```bash
+npm run pack
+```
+
+```bash
+npm run dist:linux
+```
+
+```bash
+npm run dist:win
+```
+
+```bash
+npm run dist:mac
+```
+
+`pack` makes an unpacked app in `dist/` for a quick test. The `dist:*` scripts build an AppImage and a .deb on Linux, an NSIS installer (x64 + arm64) on Windows, and a universal dmg + zip on macOS. Build each platform on that OS. Packaging settings live in `electron-builder.config.cjs`, and the icon is generated from `build/icon.svg` into `build/icon.png`.
+
+Code signing isn't set up. Unsigned Windows builds trigger SmartScreen, and macOS builds need signing and notarisation (`CSC_LINK`, `APPLE_ID`, …) before Gatekeeper and auto-update will accept them.
+
 ## Configuration
 
 Copy `.env.example` to `.env`. Both keys can also be set at runtime in **Settings → Advanced**.
@@ -122,8 +144,10 @@ vendor/
 - [ ] Keyboard shortcuts and a command palette
 
 ### Next
-- [ ] `electron-builder.yml`: Windows (NSIS), macOS (dmg, notarisation hooks), Linux (AppImage, deb)
-- [ ] App icons for all platforms
+- [x] electron-builder config: Windows (NSIS), macOS (dmg + zip), Linux (AppImage, deb)
+- [x] App icon
+- [ ] Code signing for Windows and macOS notarisation
+- [ ] CI workflow that builds all three platforms on tag
 - [ ] End-to-end launch test with a real account
 - [ ] Integration test script for all loaders, run under Electron's Node
 - [ ] Better errors when Mojang/loader servers are down (offline cache of version lists)

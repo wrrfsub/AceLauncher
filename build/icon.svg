@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 32 32">
+  <!-- Source for the app icon; electron-builder derives .ico/.icns from icon.png. -->
+  <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="#0f1013"/>
+  <rect x="4.5" y="4.5" width="23" height="23" rx="6" fill="#5ee38b"/>
+  <path d="M10.6 22 16 9.8 21.4 22" fill="none" stroke="#062611" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12.9 17.8h6.2" stroke="#062611" stroke-width="2.6" stroke-linecap="round"/>
+</svg>

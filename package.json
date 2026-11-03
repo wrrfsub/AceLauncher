@@ -3,7 +3,10 @@
   "productName": "Ace Launcher",
   "version": "0.1.0",
   "description": "A modern Minecraft launcher",
-  "author": "Ace Launcher",
+  "author": {
+    "name": "subway",
+    "email": "sysnyxx7@gmail.com"
+  },
   "license": "MIT",
   "main": "./out/main/index.js",
   "type": "module",
@@ -13,10 +16,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "test": "node --test --experimental-strip-types src/**/*.test.ts",
     "start": "electron-vite preview",
-    "dist": "npm run build && electron-builder",
-    "dist:linux": "npm run build && electron-builder --linux",
-    "dist:win": "npm run build && electron-builder --win",
-    "dist:mac": "npm run build && electron-builder --mac"
+    "dist": "npm run build && electron-builder --config electron-builder.config.cjs",
+    "dist:linux": "npm run build && electron-builder --config electron-builder.config.cjs --linux",
+    "dist:win": "npm run build && electron-builder --config electron-builder.config.cjs --win",
+    "dist:mac": "npm run build && electron-builder --config electron-builder.config.cjs --mac",
+    "pack": "npm run build && electron-builder --config electron-builder.config.cjs --dir"
   },
   "dependencies": {
     "@xmcl/core": "^2.16.3",
@@ -46,5 +50,10 @@
   },
   "overrides": {
     "@xmcl/unzip": "$@xmcl/unzip"
+  },
+  "homepage": "https://github.com/wrrfsub/AceLauncher",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wrrfsub/AceLauncher.git"
   }
 }
