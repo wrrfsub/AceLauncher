@@ -1,6 +1,7 @@
 import { app } from 'electron'
 import { join } from 'node:path'
 import { db } from '../database/index.ts'
+import { BRANDING } from '../shared/branding.ts'
 import type { Settings } from '../shared/types.ts'
 
 function defaults(): Settings {
@@ -48,7 +49,7 @@ export function curseforgeApiKey(): string {
 }
 
 export function discordClientId(): string {
-  return getSettings().discordClientId || import.meta.env.MAIN_VITE_DISCORD_CLIENT_ID || ''
+  return getSettings().discordClientId || import.meta.env.MAIN_VITE_DISCORD_CLIENT_ID || BRANDING.discordClientId
 }
 
 export const paths = {

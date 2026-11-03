@@ -92,8 +92,7 @@ Get a key at <https://console.curseforge.com> and put it in `MAIN_VITE_CURSEFORG
 
 ### Discord Rich Presence (optional)
 
-1. Go to <https://discord.com/developers/applications> → **New Application**. The name you give it is what friends see after "Playing" (e.g. *Ace Launcher*).
-2. Copy the **Application ID** from **General Information** into `MAIN_VITE_DISCORD_CLIENT_ID`, or paste it in **Settings → Discord**.
+Works out of the box: Ace ships with its own Discord application (`discordClientId` in `src/shared/branding.ts`), so friends see **Playing Ace Launcher**. Forks can use their own: create one at <https://discord.com/developers/applications> and set it in `branding.ts`, in `MAIN_VITE_DISCORD_CLIENT_ID`, or in **Settings → Discord**.
 
 The app icon is served from this repository, so you don't need to upload any art assets. Presence talks to the Discord desktop app over its local socket (no extra dependency) and can be turned off in Settings.
 

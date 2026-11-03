@@ -226,12 +226,12 @@ function DiscordSection() {
       >
         <Switch label="Show what you're playing on Discord" checked={settings.discordPresence} onChange={(v) => updateSettings({ discordPresence: v })} />
       </Row>
-      <Row title="Application ID" description="From discord.com/developers → your app → General Information. Its name is what Discord shows after “Playing”.">
+      <Row title="Application ID" description="Leave empty to use Ace Launcher's own. Only needed if you want a different name after “Playing”.">
         <Input
           className="w-60 font-mono"
           inputMode="numeric"
           value={appId}
-          placeholder="123456789012345678"
+          placeholder="Ace Launcher (default)"
           onChange={(e) => setAppId(e.target.value.trim())}
           onBlur={() => appId !== settings.discordClientId && updateSettings({ discordClientId: appId })}
         />
