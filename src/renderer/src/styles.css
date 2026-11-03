@@ -1,4 +1,5 @@
 @import '@fontsource-variable/onest';
+@import '@fontsource-variable/pixelify-sans';
 @import '@fontsource-variable/geist-mono';
 @import 'tailwindcss';
 
@@ -77,6 +78,8 @@
   --shadow-card: var(--shadow);
   --font-sans: 'Onest Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+  /* Blocky display face, used sparingly: page titles, the player name, Launch. */
+  --font-display: 'Pixelify Sans Variable', var(--font-sans);
 }
 
 html,

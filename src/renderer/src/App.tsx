@@ -30,7 +30,7 @@ function Page({ route }: { route: Route }) {
 }
 
 const TITLES: Record<Route['page'], string> = {
-  home: 'Home',
+  home: 'Play',
   instances: 'Instances',
   instance: 'Instances',
   discover: 'Discover',
