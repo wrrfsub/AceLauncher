@@ -30,7 +30,7 @@ export function InstanceDetail({ id, tab: initialTab }: { id: string; tab?: 'con
   }
 
   return (
-    <div className="mx-auto max-w-[1120px] px-6 py-5">
+    <div className="mx-auto w-full max-w-[1800px] px-[clamp(20px,2.2vw,40px)] py-5">
       <div className="flex items-center gap-4">
         <InstanceIcon inst={inst} size={52} />
         <div className="min-w-0 flex-1">

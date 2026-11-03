@@ -64,7 +64,7 @@ export function Console({ instanceId }: { instanceId?: string }) {
   }
 
   return (
-    <div className="mx-auto flex h-full max-w-[1120px] flex-col px-6 py-4">
+    <div className="mx-auto flex h-full w-full max-w-[1800px] flex-col px-[clamp(20px,2.2vw,40px)] py-4">
       <ToolbarActions>
         <Select
           className="w-64"

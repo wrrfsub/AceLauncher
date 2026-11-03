@@ -113,7 +113,7 @@ export function Discover({ instanceId, type }: { instanceId?: string; type?: Pro
   )
 
   return (
-    <div className="mx-auto max-w-[1120px] px-6 py-5">
+    <div className="mx-auto w-full max-w-[1400px] px-[clamp(20px,2.2vw,40px)] py-5">
       <ToolbarActions>
         <Segmented
           value={source}

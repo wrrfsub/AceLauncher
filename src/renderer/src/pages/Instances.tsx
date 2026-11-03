@@ -20,7 +20,7 @@ export function Instances() {
   }, [instances, query])
 
   return (
-    <div className="mx-auto max-w-[1120px] px-6 py-5">
+    <div className="mx-auto w-full max-w-[1800px] px-[clamp(20px,2.2vw,40px)] py-5">
       <ToolbarActions>
         <Input className="w-56" placeholder="Search instances" leading={<Search className="size-3.5" />} value={query} onChange={(e) => setQuery(e.target.value)} />
         <Button variant="primary" icon={Plus} onClick={() => setCreating(true)}>

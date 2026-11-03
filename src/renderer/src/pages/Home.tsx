@@ -25,8 +25,9 @@ export function Home() {
   const art = (news?.find((n) => n.tag === 'Release' && n.imageUrl) ?? news?.find((n) => n.imageUrl))?.imageUrl ?? null
 
   return (
-    <div className="mx-auto flex max-w-[1240px] flex-col gap-8 px-6 py-5">
-      <div className="grid grid-cols-[minmax(0,1fr)_248px] gap-4 max-[900px]:grid-cols-1">
+    // Fluid on purpose: the hero and player card grow with the window so a maximized window stays full.
+    <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-[clamp(24px,3vh,40px)] px-[clamp(20px,2.2vw,40px)] py-5">
+      <div className="grid grid-cols-[minmax(0,1fr)_clamp(248px,21vw,380px)] gap-4 max-[900px]:grid-cols-1">
         {featured ? <Hero inst={featured} art={art} onCreate={() => setCreating(true)} /> : <EmptyHero art={art} onCreate={() => setCreating(true)} />}
         <PlayerCard />
       </div>
@@ -40,10 +41,13 @@ export function Home() {
 /** Crisp Minecraft art behind the content; the pixel art is the point, so no blur. */
 function HeroFrame({ art, children }: { art: string | null; children: ReactNode }) {
   return (
-    <section className="relative isolate flex min-h-[300px] flex-col justify-end overflow-hidden rounded-xl border border-line bg-surface p-7">
-      {art && <img src={art} alt="" className="absolute inset-0 -z-20 size-full object-cover" style={{ imageRendering: 'pixelated' }} />}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-bg via-bg/70 to-bg/10" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-bg/80 to-transparent" />
+    // The art is clipped in its own layer so menus opened from the hero (instance picker) aren't.
+    <section className="relative isolate z-10 flex h-[clamp(300px,44vh,560px)] flex-col justify-end rounded-xl border border-line bg-surface p-[clamp(24px,2.4vw,44px)]">
+      <div className="absolute inset-0 -z-10 overflow-hidden rounded-xl">
+        {art && <img src={art} alt="" className="absolute inset-0 size-full object-cover" style={{ imageRendering: 'pixelated' }} />}
+        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/70 to-bg/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-bg/80 to-transparent" />
+      </div>
       {children}
     </section>
   )
@@ -61,7 +65,7 @@ function Hero({ inst, art, onCreate }: { inst: Instance; art: string | null; onC
           </Badge>
         )}
       </div>
-      <h1 className="mt-3 max-w-[560px] truncate font-display text-[40px] leading-[1.05]">{inst.name}</h1>
+      <h1 className="mt-3 max-w-[70%] truncate font-display text-[clamp(36px,3.4vw,64px)] leading-[1.05]">{inst.name}</h1>
       <p className="mt-2 text-[13px] text-text-2">
         {inst.lastPlayedAt ? `${duration(inst.playTime)} played, last ${ago(inst.lastPlayedAt)}` : 'Not played yet'}
       </p>
@@ -83,7 +87,7 @@ function EmptyHero({ art, onCreate }: { art: string | null; onCreate(): void }) 
   const { navigate } = useApp()
   return (
     <HeroFrame art={art}>
-      <h1 className="font-display text-[40px] leading-[1.05]">Ready when you are</h1>
+      <h1 className="font-display text-[clamp(36px,3.4vw,64px)] leading-[1.05]">Ready when you are</h1>
       <p className="mt-2 max-w-md text-[13px] text-text-2">Create an instance with any Minecraft version and mod loader. Ace downloads the game and the right Java for you.</p>
       <div className="mt-6 flex gap-2">
         <Button size="lg" variant="primary" icon={Plus} onClick={onCreate}>
@@ -203,7 +207,7 @@ function PlayerCard() {
     void act(() => invoke('accounts:login'))
   }
   return (
-    <aside className="relative flex min-h-[300px] flex-col overflow-hidden rounded-xl border border-line bg-surface">
+    <aside className="relative flex h-[clamp(300px,44vh,560px)] flex-col overflow-hidden rounded-xl border border-line bg-surface">
       <div className="absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-accent/12 to-transparent" />
       <div className="relative min-h-0 flex-1">
         <SkinStage skinUrl={account?.skinUrl ?? null} className="absolute inset-0" />
@@ -245,8 +249,8 @@ function Shelf({ featuredId, onCreate }: { featuredId: string | null; onCreate()
           </button>
         }
       />
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2.5">
-        {instances.slice(0, 7).map((inst) => (
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-2.5">
+        {instances.slice(0, 11).map((inst) => (
           <div
             key={inst.id}
             className={cn('group relative flex items-center gap-3 rounded-lg border bg-surface p-2.5 transition-colors hover:border-line-strong', inst.id === featuredId ? 'border-accent/40' : 'border-line')}
@@ -275,15 +279,27 @@ function Shelf({ featuredId, onCreate }: { featuredId: string | null; onCreate()
   )
 }
 
+const NEWS_CARD_MIN = 260
+const NEWS_GAP = 12
+
 function NewsRow({ news, error }: { news: NewsItem[] | null; error: string | null }) {
+  // One full row of cards, however wide the window is.
+  const row = useRef<HTMLDivElement>(null)
+  const [cols, setCols] = useState(4)
+  useEffect(() => {
+    if (!row.current) return
+    const ro = new ResizeObserver(([e]) => e && setCols(Math.max(2, Math.floor((e.contentRect.width + NEWS_GAP) / (NEWS_CARD_MIN + NEWS_GAP)))))
+    ro.observe(row.current)
+    return () => ro.disconnect()
+  }, [])
   return (
     <section>
       <SectionHead title="Minecraft news" />
       {error ? (
         <p className="text-xs text-text-3">Couldn't load news: {error}</p>
       ) : (
-        <div className="grid grid-cols-4 gap-3 max-[1100px]:grid-cols-3 max-[800px]:grid-cols-2">
-          {(news ?? Array.from({ length: 4 }, () => null)).slice(0, 4).map((n, i) =>
+        <div ref={row} className="grid gap-3" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+          {(news ?? Array.from({ length: cols }, () => null)).slice(0, cols).map((n, i) =>
             n ? (
               <a key={n.id} href={n.url ?? undefined} target="_blank" rel="noreferrer" className="group overflow-hidden rounded-lg border border-line bg-surface hover:border-line-strong">
                 {n.imageUrl && (
